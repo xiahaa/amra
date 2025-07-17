@@ -45,3 +45,19 @@ target_link_libraries(runuav AMRA)
 # add_executable(ompl_run test/ompl_run.cpp)
 # target_include_directories(ompl_run SYSTEM PRIVATE ${OMPL_INCLUDE_DIRS})
 # target_link_libraries(ompl_run AMRA SMPL ${OMPL_LIBRARIES})
+
+# ===== Install configuration =====
+install(TARGETS SMPL AMRA run2d runuav
+    EXPORT amra-targets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    RUNTIME DESTINATION bin
+)
+
+install(DIRECTORY include/ DESTINATION include)
+
+install(FILES
+    # Optionally install CMake config files or other resources here
+    # e.g. amraConfig.cmake
+    DESTINATION share/amra
+)
