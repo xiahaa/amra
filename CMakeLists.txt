@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(amra)
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/install)
 
 # 启用位置无关代码（fPIC）
 # set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -36,7 +37,8 @@ add_library(
     src/amra/arastar.cpp
     src/amra/amra.cpp
     src/amra/movingai.cpp
-    src/amra/constants.cpp)
+    src/amra/constants.cpp
+    src/plan_2d.cpp)
     #src/amra/CostConvergenceTerminationCondition.cpp)
 target_link_libraries(AMRA SMPL)
 
@@ -45,6 +47,27 @@ target_link_libraries(run2d AMRA)
 
 add_executable(runuav test/runuav.cpp)
 target_link_libraries(runuav AMRA)
+
+# Find Python and pybind11
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+find_package(pybind11 REQUIRED)
+
+# Add your Python extension source file(s) here
+add_library(amra_python MODULE python/wrapper.cpp)
+
+target_link_libraries(amra_python
+    PRIVATE
+        pybind11::module
+        AMRA
+        SMPL
+        ${Boost_FILESYSTEM_LIBRARY} ${Boost_PROGRAM_OPTIONS_LIBRARY} ${Boost_SYSTEM_LIBRARY}
+)
+
+set_target_properties(amra_python PROPERTIES
+    PREFIX ""
+    OUTPUT_NAME "amra"
+    LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+)
 
 # add_executable(ompl_run test/ompl_run.cpp)
 # target_include_directories(ompl_run SYSTEM PRIVATE ${OMPL_INCLUDE_DIRS})

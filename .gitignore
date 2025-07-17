@@ -1,2 +1,8 @@
 build/
 buildd/
+*.o
+*.d
+.gitignore
+lib/
+install/
+*.so

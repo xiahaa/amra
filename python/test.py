@@ -1,7 +1,22 @@
 import sys
 
 # Assume Python bindings for amra exist
-from amra import plan_2d, MOVINGAI_DICT
+from AMRA import plan_2d
+
+
+MOVINGAI_DICT = {
+    '.': 1,
+    'G': 1,
+    '@': -1,
+    'O': -1,
+    'T': 0,
+    'S': 1,
+    'W': 2,    # water is only traversible from water
+    '(': 1000, # start
+    '*': 1001, # path
+    ')': 1002, # goal
+    'E': 1003, # expanded state
+}
 
 def read_map(mapfile):
     with open(mapfile, 'r') as f:
@@ -21,7 +36,7 @@ def read_map(mapfile):
         return width, height, map_data
 
 def main():
-    mapfile = sys.argv[1] if len(sys.argv) > 1 else "dat/Boston_0_1024.map"
+    mapfile = sys.argv[1] if len(sys.argv) > 1 else "../dat/Boston_0_1024.map"
     width, height, map_data = read_map(mapfile)
     origin = [0.0, 0.0]
     dim = [width, height]
