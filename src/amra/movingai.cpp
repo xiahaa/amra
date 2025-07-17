@@ -23,6 +23,19 @@ m_rng(m_dev())
 	m_distD = std::uniform_real_distribution<double>(0.0, 1.0);
 };
 
+MovingAI::MovingAI(int width, int height, std::vector<signed char>& map)
+:
+m_rng(m_dev())
+{
+	m_w = width;
+	m_h = height;
+	m_map = (MAP_t)calloc(m_h * m_w, sizeof(decltype(*m_map)));
+	for (int i = 0; i < m_h * m_w; ++i) {
+		m_map[i] = map[i];
+	}
+	m_distD = std::uniform_real_distribution<double>(0.0, 1.0);
+}
+
 MovingAI::~MovingAI()
 {
 	free(m_map);

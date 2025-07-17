@@ -44,6 +44,23 @@ m_goal_set(false)
 	m_state_to_id.clear();
 }
 
+Grid2D::Grid2D(int width, int height, std::vector<signed char>& map)
+:
+m_start_set(false),
+m_goal_set(false)
+{
+	m_map = std::make_unique<MovingAI>(width, height, map);
+
+	// reset everything
+	for (MapState* s : m_states) {
+		if (s != NULL) {
+			delete s;
+			s = nullptr;
+		}
+	}
+	m_state_to_id.clear();
+}
+
 void Grid2D::CreateSearch()
 {
 	if (GRID == 4) {
@@ -333,6 +350,11 @@ void Grid2D::GetStateFromID(const int& id, MapState& state)
 {
 	MapState* hashentry = getHashEntry(id);
 	state = *hashentry;
+}
+
+void Grid2D::GetSolution(std::vector<int>& solution, std::vector<int>& action_ids, int& solcost)
+{
+	m_search->GetSolution(solution, action_ids, solcost);
 }
 
 Resolution::Level Grid2D::GetResLevel(const int& state_id)

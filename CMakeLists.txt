@@ -31,6 +31,7 @@ add_library(
     src/amra/amra.cpp
     src/amra/movingai.cpp
     src/amra/constants.cpp
+    src/amra/interface.cpp
     src/amra/CostConvergenceTerminationCondition.cpp)
 target_link_libraries(AMRA SMPL)
 
