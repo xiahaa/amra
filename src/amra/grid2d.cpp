@@ -44,6 +44,23 @@ m_goal_set(false)
 	m_state_to_id.clear();
 }
 
+Grid2D::Grid2D(int width, int height, std::vector<signed char>& map)
+:
+m_start_set(false),
+m_goal_set(false)
+{
+	m_map = std::make_unique<MovingAI>(width, height, map);
+
+	// reset everything
+	for (MapState* s : m_states) {
+		if (s != NULL) {
+			delete s;
+			s = nullptr;
+		}
+	}
+	m_state_to_id.clear();
+}
+
 void Grid2D::CreateSearch()
 {
 	if (GRID == 4) {
@@ -124,6 +141,75 @@ void Grid2D::SetGoal(const int& d1, const int& d2)
 	m_g1 = d1;
 	m_g2 = d2;
 	printf("Goal: {%d, %d},\n", m_g1, m_g2);
+}
+
+// void Grid2D::GetSolution(std::vector<int>& solution, std::vector<int>& action_ids, int& solcost)
+// {
+// 	m_search->extract_path(solution, action_ids, solcost);
+// }
+
+bool Grid2D::Plan(std::vector<std::vector<int>> &path)
+{
+	int d1s, d2s, d1g, d2g;
+	if (!m_start_set)
+	{
+		// set random start
+		m_map->GetRandomState(d1s, d2s);
+		m_start_id = getOrCreateState(d1s, d2s);
+		m_start_set = true;
+
+		m_s1 = d1s;
+		m_s2 = d2s;
+		printf("Start: {%d, %d},\t", m_s1, m_s2);
+	}
+
+	if (!m_goal_set)
+	{
+		// set random goal
+		do {
+			m_map->GetRandomState(d1g, d2g);
+		}
+		while (d1g == d1s && d2g == d2s);
+
+		m_goal_id = getOrCreateState(d1g, d2g);
+		m_goal_set = true;
+
+		m_g1 = d1g;
+		m_g2 = d2g;
+		printf("Goal: {%d, %d},\n", m_g1, m_g2);
+	}
+
+	m_search->set_start(m_start_id);
+	m_search->set_goal(m_goal_id);
+
+	if (DIJKSTRA)
+	{
+		auto robot = getHashEntry(m_start_id);
+		auto goal = getHashEntry(m_goal_id);
+		m_heurs.back()->Init(robot->coord, goal->coord);
+	}
+
+	std::vector<int> solution;
+	std::vector<int> action_ids;
+    int solcost;
+    bool result = m_search->replan(&solution, &action_ids, &solcost);
+	path.clear();
+	if (result)
+	{
+		std::vector<MapState> solpath;
+		convertPath(solution, solpath);
+		for (const auto& s : solpath)
+		{
+			std::vector<int> coord;
+			for (size_t i = 0; i < s.coord.size(); ++i)
+			{
+				coord.push_back(s.coord.at(i));
+			}
+			path.push_back(coord);
+		}
+		return true;
+	}
+	return false;
 }
 
 bool Grid2D::Plan(bool save)

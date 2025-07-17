@@ -16,6 +16,7 @@ class MovingAI
 {
 public:
 	MovingAI(const std::string& fname);
+	MovingAI(int width, int height, std::vector<signed char>& map);
 	~MovingAI();
 
 	void GetRandomState(int& d1, int& d2);

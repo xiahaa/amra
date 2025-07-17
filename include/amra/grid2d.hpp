@@ -32,7 +32,7 @@ class Grid2D : public Environment
 {
 public:
 	Grid2D(const std::string& mapname);
-
+	Grid2D(int width, int height, std::vector<signed char>& map);
 	void SetStart(const int& d1, const int& d2);
 	void SetGoal(const int& d1, const int& d2);
 
@@ -56,7 +56,7 @@ public:
 	void GetStart(MapState& start);
 	void GetGoal(MapState& goal);
 	void GetStateFromID(const int& id, MapState& state);
-
+	bool Plan(std::vector<std::vector<int>> &path);
 	Resolution::Level GetResLevel(const int& state_id) override;
 
 private:
