@@ -1,7 +1,8 @@
-#include <amra/interface.h>
+// #include <amra/interface.h>
 #include <amra/grid2d.hpp>
 #include <amra/helpers.hpp>
 #include <chrono>
+#include "plan_2d.h"
 
 int plan_2d(
     std::vector<float>& origin,

@@ -1,10 +1,14 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(amra)
 
+# 启用位置无关代码（fPIC）
+# set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -fmax-errors=5")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 find_package(Boost REQUIRED COMPONENTS filesystem program_options system)
 # find_package(OMPL REQUIRED)
